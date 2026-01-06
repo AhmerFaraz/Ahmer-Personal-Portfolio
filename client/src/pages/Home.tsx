@@ -26,6 +26,7 @@ export default function Home() {
   const [displayedName, setDisplayedName] = useState("");
   const [displayedTagline, setDisplayedTagline] = useState("");
   const [showTagline, setShowTagline] = useState(false);
+  const [isTyping, setIsTyping] = useState(true);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -43,7 +44,7 @@ export default function Home() {
 
   // Typing animation for name
   useEffect(() => {
-    const fullName = "Ahmer Faraz Mohammad Naseem";
+    const fullName = "Ahmer Faraz";
     let index = 0;
     const interval = setInterval(() => {
       if (index < fullName.length) {
@@ -51,6 +52,7 @@ export default function Home() {
         index++;
       } else {
         clearInterval(interval);
+        setIsTyping(false);
         setShowTagline(true);
       }
     }, 50);
@@ -60,7 +62,7 @@ export default function Home() {
   // Fade in tagline
   useEffect(() => {
     if (showTagline) {
-      const fullTagline = "Jr. Python Developer | Full Stack Web Developer | Problem Solver";
+      const fullTagline = "Jr. Python Developer | Django Developer | AI/ML | Problem Solver";
       let index = 0;
       const interval = setInterval(() => {
         if (index < fullTagline.length) {
@@ -79,7 +81,7 @@ export default function Home() {
       category: "Languages",
       skills: [
         { name: "Python", level: 90 },
-        { name: "JavaScript", level: 85 },
+        { name: "JavaScript", level: 60 },
         { name: "HTML/CSS", level: 90 },
       ],
     },
@@ -88,7 +90,7 @@ export default function Home() {
       skills: [
         { name: "Django", level: 88 },
         { name: "Django REST Framework", level: 87 },
-        { name: "React", level: 80 },
+        { name: "Flask", level: 60 },
         { name: "Git & GitHub", level: 85 },
       ],
     },
@@ -107,7 +109,7 @@ export default function Home() {
       title: "Buy-It",
       description: "A mobile retail website for purchasing smartphones and electronics with cart functionality and responsive design.",
       technologies: ["HTML", "CSS", "Bootstrap", "PHP"],
-      link: "#",
+      link: "https://github.com/AhmerFaraz/Buy-It-",
     },
     {
       title: "Stock Alert System",
@@ -146,34 +148,108 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Animated Background */}
-      <div className="animated-bg" />
+  // Calculate experience duration
+  const calculateExperience = (startDate: string) => {
+    const start = new Date(startDate);
+    const end = new Date();
+    
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+    
+    // Adjust if current month is before start month
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    
+    // Adjust if current day is before start day (approximate)
+    if (end.getDate() < start.getDate()) {
+      months--;
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+    }
+    
+    if (years > 0 && months > 0) {
+      return `${years} year${years > 1 ? 's' : ''} ${months} month${months > 1 ? 's' : ''}`;
+    } else if (years > 0) {
+      return `${years} year${years > 1 ? 's' : ''}`;
+    } else if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    } else {
+      return 'Less than 1 month';
+    }
+  };
 
-      {/* Falling Stars/Meteor Shower */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {[...Array(30)].map((_, i) => (
+  const experienceDuration = calculateExperience('2025-01-01');
+
+  return (
+    <div className="min-h-screen bg-background text-foreground overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="animated-bg">
+        {/* Animated Gradient Layers */}
+        <div className="nebula-layer nebula-1"></div>
+        <div className="nebula-layer nebula-2"></div>
+        <div className="nebula-layer nebula-3"></div>
+      </div>
+
+      {/* Starfield Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden starfield">
+        {[...Array(100)].map((_, i) => (
           <div
-            key={i}
-            className="particle"
+            key={`star-${i}`}
+            className="star"
             style={{
               left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${Math.random() * 2 + 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Falling Stars/Meteor Shower */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-[2]">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`meteor-${i}`}
+            className="meteor"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${Math.random() * 2 + 1.5}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Floating Orbs for Depth */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-[1]">
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={`orb-${i}`}
+            className="floating-orb"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDuration: `${Math.random() * 10 + 15}s`,
             }}
           />
         ))}
       </div>
 
       {/* Header Navigation */}
-      <header className="sticky top-0 z-50 glass-card m-2 md:m-4 rounded-2xl">
+      <header className="fixed top-0 left-0 right-0 z-50 glass-card m-2 md:m-4 rounded-2xl">
         <nav className="container flex justify-between items-center py-3 md:py-4">
-          <div className="text-xl md:text-2xl font-bold neon-glow">AF</div>
+          <div className="text-xl md:text-2xl font-bold neon-glow">𓆘 Ahmer Faraz</div>
           <div className="hidden md:flex gap-6 lg:gap-8">
             <a href="#about" className="text-sm lg:text-base hover:text-accent transition-colors">About</a>
             <a href="#skills" className="text-sm lg:text-base hover:text-accent transition-colors">Skills</a>
             <a href="#projects" className="text-sm lg:text-base hover:text-accent transition-colors">Projects</a>
+            <a href="#experience" className="text-sm lg:text-base hover:text-accent transition-colors">Experience</a>
             <a href="#education" className="text-sm lg:text-base hover:text-accent transition-colors">Education</a>
             <a href="#contact" className="text-sm lg:text-base hover:text-accent transition-colors">Contact</a>
           </div>
@@ -188,10 +264,13 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 py-16 md:py-20">
+      <section className="relative min-h-screen flex items-center justify-center px-4 pt-24 pb-16 md:pt-28 md:pb-20 z-10">
         <div className="max-w-4xl mx-auto text-center w-full">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 typing text-white">
-            {displayedName}
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">
+            <span className="inline-block typing-container">
+              {displayedName}
+              {isTyping && <span className="typing-cursor">|</span>}
+            </span>
           </h1>
           <p className="text-base sm:text-lg md:text-2xl text-accent mb-6 md:mb-8 fade-in-down" style={{ animationDelay: "3.5s" }}>
             {displayedTagline}
@@ -215,7 +294,7 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-12 md:py-20 px-4">
+      <section id="about" className="py-12 md:py-20 px-4 relative z-10">
         <div className="container max-w-4xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">About Me</h2>
           <div className="glass-card p-6 md:p-8 rounded-2xl">
@@ -230,7 +309,7 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-12 md:py-20 px-4">
+      <section id="skills" className="py-12 md:py-20 px-4 relative z-10">
         <div className="container max-w-4xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Skills & Expertise</h2>
           <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
@@ -272,9 +351,9 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-12 md:py-20 px-4">
+      <section id="projects" className="py-12 md:py-20 px-4 relative z-10">
         <div className="container max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Projects & Experience</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Projects</h2>
           <div className="space-y-4 md:space-y-6">
             {projects.map((project, idx) => (
               <div key={idx} className="glass-card p-6 md:p-8 rounded-2xl hover:scale-105 transition-transform duration-300">
@@ -297,15 +376,24 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Current Role */}
-          <div className="mt-6 md:mt-8 glass-card p-6 md:p-8 rounded-2xl border-l-4 border-accent">
+      {/* Experience Section */}
+      <section id="experience" className="py-12 md:py-20 px-4 relative z-10">
+        <div className="container max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Experience</h2>
+          <div className="glass-card p-6 md:p-8 rounded-2xl border-l-4 border-accent">
             <div className="flex items-start gap-4">
               <Briefcase className="text-accent mt-1 flex-shrink-0" size={24} />
               <div className="w-full">
                 <h3 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">Jr. Python Developer</h3>
                 <p className="text-sm md:text-base text-accent mb-1 md:mb-2">Yudiz Solutions Ltd | Ahmedabad, India</p>
-                <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">Jan 2025 - Present</p>
+                <div className="flex flex-wrap items-center gap-2 mb-3 md:mb-4">
+                  <p className="text-xs md:text-sm text-muted-foreground">Jan 2025 - Present</p>
+                  <span className="text-xs md:text-sm text-muted-foreground">•</span>
+                  <p className="text-xs md:text-sm text-accent font-semibold">{experienceDuration}</p>
+                </div>
                 <ul className="space-y-1 md:space-y-2 text-xs md:text-sm text-muted-foreground">
                   <li>• Developed and maintained web applications using Django & Django REST Framework</li>
                   <li>• Built reusable components and optimized database queries for high performance</li>
@@ -319,7 +407,7 @@ export default function Home() {
       </section>
 
       {/* Education Section */}
-      <section id="education" className="py-12 md:py-20 px-4">
+      <section id="education" className="py-12 md:py-20 px-4 relative z-10">
         <div className="container max-w-4xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Education & Certifications</h2>
 
@@ -360,7 +448,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-12 md:py-20 px-4">
+      <section id="contact" className="py-12 md:py-20 px-4 relative z-10">
         <div className="container max-w-2xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-center neon-glow">Get In Touch</h2>
 
@@ -439,9 +527,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-6 md:py-8 px-4 border-t border-accent/20">
+      <footer className="py-6 md:py-8 px-4 border-t border-accent/20 relative z-10">
         <div className="container max-w-4xl text-center text-muted-foreground text-xs md:text-sm">
-          <p>© 2025 Ahmer Faraz Mohammad Naseem. All rights reserved.</p>
+          <p>© 2025 Ahmer Faraz. All rights reserved.</p>
           <p className="text-xs mt-1 md:mt-2">Crafted with passion and modern web technologies.</p>
         </div>
       </footer>
